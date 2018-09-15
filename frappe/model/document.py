@@ -835,6 +835,8 @@ class Document(BaseDocument):
 	def _submit(self):
 		"""Submit the document. Sets `docstatus` = 1, then saves."""
 		self.docstatus = 1
+		self.submitted_date = now()
+		self.submitted_by = frappe.session.user
 		self.save()
 
 	@whitelist.__func__
@@ -990,7 +992,7 @@ class Document(BaseDocument):
 			frappe.db.commit()
 
 	def db_get(self, fieldname):
-		'''get database vale for this fieldname'''
+		'''get database value for this fieldname'''
 		return frappe.db.get_value(self.doctype, self.name, fieldname)
 
 	def check_no_back_links_exist(self):

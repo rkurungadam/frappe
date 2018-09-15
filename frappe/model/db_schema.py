@@ -235,6 +235,16 @@ class DbTable:
 					'fieldtype': 'Text'
 				})
 
+			if getattr(self.meta, 'is_submittable', False):
+				fl.append({
+					'fieldname': 'submitted_date',
+					'fieldtype': 'Datetime'
+				})
+				fl.append({
+					'fieldname': 'submitted_by',
+					'fieldtype': 'Text'
+				})
+
 		if not frappe.flags.in_install_db and (frappe.flags.in_install != "frappe" or frappe.flags.ignore_in_install):
 			custom_fl = frappe.db.sql("""\
 				SELECT * FROM `tabCustom Field`
@@ -556,7 +566,7 @@ class DbManager:
 	def restore_database(self,target,source,user,password):
 		from frappe.utils import make_esc
 		esc = make_esc('$ ')
-		
+
 		from distutils.spawn import find_executable
 		pipe = find_executable('pv')
 		if pipe:
@@ -580,7 +590,7 @@ class DbManager:
 			target   = esc(target),
 			source   = source
 		)
-		os.system(command)	
+		os.system(command)
 
 	def drop_table(self,table_name):
 		"""drop table if exists"""
